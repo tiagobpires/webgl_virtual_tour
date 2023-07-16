@@ -46,34 +46,84 @@ function createCamera(pos, target, up)
     return cam;
 }             
 
-function handleKeyPress(event, camPosition, initialCamPosition)
+function moveCameraLeft() {
+	let angle = 2.5;
+	let radians = (angle * Math.PI) / 180;
+
+	// Calcular as novas coordenadas para onde a câmera está olhando
+	let dx = targetPosition[0] - camPosition[0];
+	let dz = targetPosition[2] - camPosition[2];
+
+	let newX = dx * Math.cos(radians) + dz * Math.sin(radians);
+	let newZ = dz * Math.cos(radians) - dx * Math.sin(radians);
+
+	targetPosition = [
+		camPosition[0] + newX, 
+		targetPosition[1], 
+		camPosition[2] + newZ
+	];
+
+	return createCamera(
+		camPosition,
+		targetPosition,
+		[camPosition[0], camPosition[1] + 1, camPosition[2]]
+	);
+}
+
+function moveCameraRight() {
+	let angle = 2.5;
+	let radians = (angle * Math.PI) / 180;
+
+	// Calcular as novas coordenadas para onde a câmera está olhando
+	let dx = targetPosition[0] - camPosition[0];
+	let dz = targetPosition[2] - camPosition[2];
+
+	let newX = dx * math.cos(radians) - dz * math.sin(radians);
+	let newZ = dx * math.sin(radians) + dz * math.cos(radians);
+
+	targetPosition = [
+		camPosition[0] + newX, 
+		targetPosition[1], 
+		camPosition[2] + newZ
+	];
+
+	return createCamera(
+		camPosition,
+		targetPosition,
+		[camPosition[0], camPosition[1] + 1, camPosition[2]]
+	);
+}
+
+function handleKeyPress(event)
 {
 	var stepSize = 0.1; 
 	var key = event.key;
 
-	switch (key) {
-		case "ArrowLeft":
-			camPosition[0] -= stepSize;
-			break;
-		case "ArrowUp":
-			camPosition[2] -= stepSize;
-			break;
-		case "ArrowRight":
-			camPosition[0] += stepSize;
-			break;
-		case "ArrowDown":
-			camPosition[2] += stepSize;
-			break;
-	}
+	console.log(targetPosition);
 
+	if (key == "ArrowLeft")
+		return moveCameraLeft();
+	else if (key == "ArrowRight")
+		return moveCameraRight();
+	else if (key == "ArrowUp") {
+		camPosition[2] -= stepSize;
+		targetPosition[2] -= stepSize;
+	}else if (key == "ArrowDown") {
+		camPosition[2] += stepSize;
+		targetPosition[2] += stepSize;
+	}
 	var u_camPosPtr = gl.getUniformLocation(prog, "u_camPos");
 	gl.uniform3fv(u_camPosPtr, camPosition);
 
+	// targetPosition = [
+	// 	camPosition[0] - initialCamPosition[0], 
+	// 	camPosition[1] - initialCamPosition[1], 
+	// 	camPosition[2] - initialCamPosition[2]
+	// ];
+
 	return createCamera(
 		camPosition, 
-		[camPosition[0] - initialCamPosition[0], 
-		 camPosition[1] - initialCamPosition[1], 
-		 camPosition[2] - initialCamPosition[2]],
+		targetPosition,
 		[camPosition[0], camPosition[1] + 1, camPosition[2]]
 	);
 }

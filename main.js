@@ -7,18 +7,19 @@ var progTexture;
 var progSolidColor;
 var angle = 0;
 
-var initialCamPosition = [0, 5, 14]
+var initialCamPosition = [0, 3, 14];
+let targetPosition = [0, 0, 0];
 
-var camPosition = initialCamPosition.slice()
+var camPosition = initialCamPosition.slice();
 var cam = createCamera(camPosition, 
-					   [0, 0, 0], 
+					   targetPosition, 
 					   [camPosition[0], camPosition[1] + 1, camPosition[2]]
 					   );
 
 var lightPosition = [0.0, 1.0, 0.0];
 					   
 document.addEventListener("keydown", function(event) {
-	cam = handleKeyPress(event, camPosition, initialCamPosition);
+	cam = handleKeyPress(event);
 });
 
 function init()
