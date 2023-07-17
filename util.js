@@ -47,7 +47,7 @@ function createCamera(pos, target, up)
 }             
 
 function moveCameraLeft() {
-	let angle = 2.5;
+	let angle = 5;
 	let radians = (angle * Math.PI) / 180;
 
 	// Calcular as novas coordenadas para onde a câmera está olhando
@@ -71,7 +71,7 @@ function moveCameraLeft() {
 }
 
 function moveCameraRight() {
-	let angle = 2.5;
+	let angle = 5;
 	let radians = (angle * Math.PI) / 180;
 
 	// Calcular as novas coordenadas para onde a câmera está olhando
@@ -96,7 +96,7 @@ function moveCameraRight() {
 
 function handleKeyPress(event)
 {
-	var stepSize = 0.1; 
+	var stepSize = 0.5; 
 	var key = event.key;
 
 	console.log(targetPosition);
@@ -114,12 +114,6 @@ function handleKeyPress(event)
 	}
 	var u_camPosPtr = gl.getUniformLocation(prog, "u_camPos");
 	gl.uniform3fv(u_camPosPtr, camPosition);
-
-	// targetPosition = [
-	// 	camPosition[0] - initialCamPosition[0], 
-	// 	camPosition[1] - initialCamPosition[1], 
-	// 	camPosition[2] - initialCamPosition[2]
-	// ];
 
 	return createCamera(
 		camPosition, 

@@ -46,6 +46,9 @@ void main()
 precision mediump float;
 
 uniform sampler2D u_tex;
+uniform sampler2D u_normalMap;
+uniform bool u_useNormalMap;
+
 uniform bool u_useTexture;
 uniform vec3 u_color;
 
@@ -64,8 +67,14 @@ void main()
     vec3 v_pointToCam_n = normalize(v_pointToCam);
 
 	vec3 halfVec = normalize(v_pointToCam_n + v_pointToLight_n);
+	vec3 v_normal_n;
 
-    vec3 v_normal_n = normalize(v_normal);
+	if (u_useNormalMap) {
+		v_normal_n = normalize(v_normal + texture2D(u_normalMap, v_texCoord).xyz);
+	} else {
+		v_normal_n = normalize(v_normal);
+	}
+
     vec3 u_lightDirection_n = normalize(u_lightDirection);
 
     float lightd = dot(v_normal_n, u_lightDirection_n);
@@ -83,13 +92,13 @@ void main()
     
 		finalColor = 0.4 * u_lightColor * texColor;
 		finalColor += 0.2 * u_lightColor * lightd * texColor;    
-		finalColor += 0.4 * u_lightColor * lightp * texColor;
-		finalColor += u_lightColor * pow(lighte, 500.0) * texColor;    
+		finalColor += 0.3 * u_lightColor * lightp * texColor;
+		finalColor += 0.7 * u_lightColor * pow(lighte, 500.0) * texColor;    
 	} else {
         finalColor = 0.4 * u_lightColor * u_color.rgb;
         finalColor += 0.2 * u_lightColor * lightd * u_color.rgb;    
-        finalColor += 0.4 * u_lightColor * lightp * u_color.rgb;
-        finalColor += u_lightColor * pow(lighte, 500.0) * u_color.rgb; 
+        finalColor += 0.3 * u_lightColor * lightp * u_color.rgb;
+        finalColor += 0.7 * u_lightColor * pow(lighte, 500.0) * u_color.rgb; 
 	}
 	
     gl_FragColor.rgb = finalColor;
@@ -101,6 +110,9 @@ void main()
 
 <canvas id="glcanvas1" width="700" height="600"></canvas>
 
+<h3>
+	Use as setas Up e Down para se movimentar "para frente" e "para tras". E as setas Left e Right para mudar o angulo da câmera.
+</h3>
 </body>
 
 </html>
